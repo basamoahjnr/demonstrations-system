@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:of="http://omnifaces.org/functions" xmlns:h="http://java.sun.com/jsf/html"
+                template="/WEB-INF/layout/simpleTemplate.xhtml">
+
+    <ui:define name="headTitle">#{bundle.TutorDashboard_title}</ui:define>
+
+    <ui:define name="metadata">
+        <style>
+            .ui-selectonemenu {
+                width: 100%;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="notice">
+
+    </ui:define>
+
+    <ui:define name="wrapper">
+        <div>
+            The general workflow:
+            <ul>
+                <li>1. On the menu bar click on demonstration and then create demonstration</li>
+                <li>2. Then you can either create procedures or upload procedures to a created demonstration</li>
+                <li>3. To create procedures for a demonstration navigate to procedures and select create procedures</li>
+                <li>4. To upload procedures for a demonstration navigate to procedures and select upload procedures to demonstration</li>
+            </ul>
+            The Grading Workflow:
+            <ul>
+                <li>1. Click on grading and select schedule demonstration </li>
+                <li>2. Once done click on grading again and then grade demonstration, there is information on what to do next on the page</li>
+                <li>3. The grading results can be downloaded from the grading sub menu, download results</li>
+            </ul>
+        </div>
+    </ui:define>
+</ui:composition>
+

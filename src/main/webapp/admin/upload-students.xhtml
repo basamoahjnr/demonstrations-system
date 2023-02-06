@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+                template="/WEB-INF/layout/simpleTemplate.xhtml">
+
+    <ui:define name="headTitle">#{bundle.UploadStudentPage_title}</ui:define>
+    <ui:define name="metadata">
+        <style>
+
+            .w-100 {
+                width: 100%;
+            }
+
+            .ui-autocomplete-input {
+                width: 85% !important;
+            }
+
+            .notice {
+                padding: 1rem 2rem;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="wrapper">
+        <h:form enctype="multipart/form-data" id="form">
+            <p:panelGrid columns="3" layout="grid" columnClasses="ui-grid-col-2,ui-grid-col-6,ui-grid-col-4">
+                <p:outputLabel value="Students Cohort" for="@next"/>
+                <p:autoComplete id="selectCohort"
+                                dropdown="true"
+                                value="#{cohortController.selected}"
+                                emptyMessage="no chort with name found"
+                                required="true"
+                                requiredMessage="#{bundle.CohortRequiredMessage}"
+                                completeMethod="#{cohortController.completeCohortName}"
+                                scrollHeight="250"
+                                cache="true"
+                                selectLimit="1"
+                                forceSelection="true"
+                                minQueryLength="3"
+                                maxResults="10"
+                                var="cohort"
+                                itemLabel="#{cohort.code} #{cohort.name}"
+                                itemValue="#{cohort}"
+                                unique="true"
+                                converter="cohortConverter"
+                                styleClass="w-100"
+                                cacheTimeout="30000">
+                    <p:ajax event="itemSelect"
+                            listener="#{cohortController.onItemSelect}"
+                            update="growl"/>
+                </p:autoComplete>
+                <p:message for="@previous" showSummary="false"/>
+
+                <p:outputLabel value="Student Program" for="@next"/>
+                <p:autoComplete id="selectProgram"
+                                dropdown="true"
+                                value="#{cohortController.program}"
+                                emptyMessage="no chort with name found"
+                                required="true"
+                                requiredMessage="#{bundle.ProgramRequiredMessage}"
+                                completeMethod="#{programController.completeProgramName}"
+                                scrollHeight="250"
+                                cache="true"
+                                selectLimit="1"
+                                forceSelection="true"
+                                minQueryLength="3"
+                                maxResults="10"
+                                var="program"
+                                itemLabel="#{program.name}"
+                                itemValue="#{program}"
+                                unique="ture"
+                                converter="programConverter"
+                                styleClass="w-100"
+                                cacheTimeout="30000">
+                    <p:ajax event="itemSelect"
+                            listener="#{programController.onItemSelect}"
+                            update="growl"/>
+                </p:autoComplete>
+                <p:message for="@previous" showSummary="false"/>
+
+                <p:outputLabel value="Select Cohort(s):" for="@next"/>
+                <p:fileUpload value="#{cohortController.file}"
+                              id="fileUpload"
+                              mode="simple"
+                              skinSimple="true"
+                              dragDropSupport="false"
+                              required="true"
+                              requiredMessage="#{bundle.ViewStudentRequiredMessage_fileUpload}"
+                              sizeLimit="1000000"
+                              fileLimit="1"
+                              multiple="false"
+                              allowTypes="/(\.|\/)(csv)$/"/>
+                <p:message for="@previous"/>
+
+                <p:commandButton actionListener="#{cohortController.upload}" value="Upload Students" ajax="false"/>
+            </p:panelGrid>
+
+
+            <p:spacer height="10"/>
+
+            <p:dataTable rendered="#{not empty cohortController.selected.students}" id="studentsTable"
+                         var="student"
+                         value="#{cohortController.selected.students}"
+                         editable="true"
+                         editMode="cell"
+                         editInitEvent="dblclick"
+                         style="margin-bottom:20px">
+
+                <f:facet name="header">
+                    <p:commandButton icon="pi pi-plus"
+                                     actionListener="#{cohortController.update}"
+                                     process="@this"
+                                     resetValues="true"
+                                     update="@form growl"
+                                     value="#{bundle.Create}">
+                    </p:commandButton>
+                </f:facet>
+
+
+                <p:column headerText="Number">
+                    <h:outputText value="#{student.number}"/>
+                </p:column>
+
+
+                <p:column headerText="Surname">
+                    <h:outputText value="#{student.surname}"/>
+                </p:column>
+
+                <p:column headerText="Other Names">
+                    <h:outputText value="#{student.otherNames}"/>
+                </p:column>
+
+
+                <p:column headerText="Email">
+                    <h:outputText value="#{student.email}"/>
+                </p:column>
+
+                <p:column headerText="Program">
+                    <h:outputText value="#{student.program.name}"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/WEB-INF/layout/simpleTemplate.xhtml">
+
+    <ui:define name="headTitle">#{bundle.GradingPage_title}</ui:define>
+
+    <ui:define name="metadata">
+        <style>
+            .ui-selectonemenu {
+                width: 100%;
+            }
+
+            .w-100 {
+                width: 100%;
+            }
+
+            .ui-autocomplete-input {
+                width: 85% !important;
+            }
+
+            .notice {
+                padding: .3rem 2rem;
+            }
+
+        </style>
+    </ui:define>
+    <ui:define name="notice">
+        <div class="ui-message-warn text-50 notice" style="margin-top: 1rem">
+            <h4><i class="pi pi-times text-2xl"/> PLEASE DO NO OPEN ANY OTHER TAB WHEN GRADING A STUDENT</h4>
+        </div>
+        <div class="ui-message-info text-50 notice" style="margin-top: 1rem">
+            <h4><i class="pi pi-times text-2xl"/> Score defaults to zero if no radio is selcted</h4>
+        </div>
+    </ui:define>
+
+
+    <ui:define name="wrapper">
+        <h:form>
+            <p:dataTable id="proceduresTable"
+                         var="gradeOutcomes"
+                         value="#{gradingController.preliminaryGradeOutcomes}"
+                         editable="true"
+                         editMode="cell"
+                         editInitEvent="dblclick"
+                         style="margin-bottom:20px">
+
+                <f:facet name="header">
+                    <h:outputText
+                            value="(#{gradingController.selected.student.number}) #{gradingController.selected.student.surname} #{gradingController.selected.student.otherNames}"/>
+                </f:facet>
+
+                <p:column headerText="Position" width="50">
+                    <h:outputText value="#{gradeOutcomes.procedure.position}"/>
+                </p:column>
+
+                <p:column headerText="Name">
+                    <h:outputText value="#{gradeOutcomes.procedure.name}"/>
+                </p:column>
+
+                <p:column headerText="Score" style="width: 20%;">
+                    <p:selectOneRadio id="score" value="#{gradeOutcomes.mark}" layout="grid" columns="5"
+                                      styleClass="grid-radio">
+                        <f:selectItems value="#{gradingController.scores}" var="score" itemLabel="#{score}"
+                                       itemValue="#{score}"/>
+                    </p:selectOneRadio>
+                </p:column>
+
+            </p:dataTable>
+            <p:commandButton action="#{gradingController.endGrading}" ajax="false" value="Complete"/>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/layout/simpleTemplate.xhtml">
+
+    <ui:define name="headTitle">#{bundle.AddTutorPage_title}</ui:define>
+
+    <ui:define name="wrapper">
+        <h:form>
+            <p:panelGrid columns="3" layout="grid" columnClasses="ui-grid-col-2,ui-grid-col-6,ui-grid-col-4">
+
+                <p:outputLabel for="@next" value="Surname :"/>
+                <p:inputText id="tutorSurname"
+                             required="true"
+                             requiredMessage="#{bundle.RequiredMessageTutor_surname}"
+                             styleClass="w-100"
+                             value="#{tutorController.selected.surname}"/>
+                <p:message for="@previous"/>
+
+                <p:outputLabel for="@next" value="Othernames :"/>
+                <p:inputText id="tutuorOthernames"
+                             required="true"
+                             requiredMessage="#{bundle.RequiredMessageTutor_otherNames}"
+                             styleClass="w-100"
+                             value="#{tutorController.selected.otherNames}"/>
+                <p:message for="@previous"/>
+
+                <p:outputLabel for="@next" value="Email Address :"/>
+                <p:inputText id="tutorEmail"
+                             required="true"
+                             requiredMessage="#{bundle.RequiredMessageTutor_email}"
+                             styleClass="w-100"
+                             value="#{tutorController.selected.email}"/>
+                <p:message for="@previous"/>
+
+                <p:outputLabel for="@next" value="Password :"/>
+                <p:password id="password"
+                            required="true"
+                            requiredMessage="#{bundle.RequiredMessageTutor_password}"
+                            styleClass="w-100"
+                            ignoreLastPass="true"
+                            feedback="true"
+                            value="#{tutorController.password}">
+                </p:password>
+                <p:message for="@previous"/>
+
+
+                <p:commandButton value="#{bundle.Create}"
+                                 icon="pi pi-plus"
+                                 update="@form growl"
+                                 action="#{tutorController.create}">
+                </p:commandButton>
+            </p:panelGrid>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

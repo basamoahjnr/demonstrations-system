@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/layout/simpleTemplate.xhtml">
+
+    <ui:define name="headTitle">#{bundle.AddProgramPage_title}</ui:define>
+
+    <ui:define name="metadata">
+        <style>
+
+            .w-100 {
+                width: 100%;
+            }
+
+            .ui-autocomplete-input {
+                width: 85% !important;
+            }
+
+            .notice {
+                padding: 1rem 2rem;
+            }
+        </style>
+    </ui:define>
+
+
+    <ui:define name="wrapper">
+        <h:form enctype="multipart/form-data" id="form">
+            <p:panelGrid columns="3" layout="grid" columnClasses="ui-grid-col-2,ui-grid-col-6,ui-grid-col-4">
+                <p:outputLabel for="@next" value="#{bundle.CreateProgramLabel_name}"/>
+                <p:inputText id="programName"
+                             required="true"
+                             requiredMessage="#{bundle.ViewProgramRequiredMessage_name}"
+                             styleClass="w-100"
+                             value="#{programController.selected.name}"/>
+                <p:message for="@previous"/>
+
+
+                <p:commandButton value="#{bundle.Create}"
+                                 icon="pi pi-plus"
+                                 update="@form growl"
+                                 action="#{programController.create}">
+                </p:commandButton>
+            </p:panelGrid>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

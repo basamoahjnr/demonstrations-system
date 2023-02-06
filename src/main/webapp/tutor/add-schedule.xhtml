@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+                template="/WEB-INF/layout/simpleTemplate.xhtml">
+
+    <ui:define name="headTitle">#{bundle.AddSchedulePage_title}</ui:define>
+    <ui:define name="metadata">
+        <style>
+
+            .w-100 {
+                width: 100%;
+            }
+
+            .ui-autocomplete-input {
+                width: 90% !important;
+            }
+
+            .notice {
+                padding: 1rem 2rem;
+            }
+
+            .ui-inputfield {
+                width: 85%;
+            }
+
+            .w-50 {
+                width: 50%;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="wrapper">
+        <h:form enctype="multipart/form-data" id="form">
+            <p:panelGrid columns="3" layout="grid" columnClasses="ui-grid-col-2,ui-grid-col-6,ui-grid-col-4">
+
+
+                <p:outputLabel value="#{bundle.ScheduleLabel_startDate}"
+                               for="@next"/>
+                <p:datePicker value="#{scheduleController.selected.startDate}"
+                              id="selectStartDateTime"
+                              showIcon="true"
+                              required="true"
+                              styleClass="w-50"
+                              requiredMessage="#{bundle.RequiredMessageSchedule_startDate}"/>
+                <p:message for="@previous"/>
+
+
+                <p:outputLabel value="#{bundle.ScheduleLabel_endDate}"
+                               for="@next"/>
+                <p:datePicker value="#{scheduleController.selected.endDate}"
+                              id="selectEndDate"
+                              styleClass="w-50"
+                              showIcon="true"/>
+                <p:message for="@previous"/>
+
+
+                <p:outputLabel for="@next" value="#{bundle.ScheduleLabel_passcode}"/>
+                <p:inputText id="selectPasscode"
+                             value="#{scheduleController.selected.passcode}"
+                             required="true"
+                             styleClass="w-50"
+                             requiredMessage="#{bundle.RequiredMessageSchedule_passcode}"/>
+                <p:message for="@previous"/>
+
+                <p:outputLabel value="#{bundle.ScheduleLabel_examiners}" for="@next"/>
+                <p:selectManyMenu id="selectExaminars" value="#{scheduleController.selected.examiners}"
+                                  required="true"
+                                  requiredMessage="#{bundle.RequiredMessageSchedule_examiners}"
+                                  converter="omnifaces.SelectItemsConverter"
+                                  filter="true"
+                                  filterMatchMode="contains"
+                                  showCheckbox="true"
+                                  styleClass="w-100">
+                    <f:selectItems value="#{tutorController.tutors}"
+                                   var="tutor"
+                                   itemLabel="#{tutor.surname} #{tutor.otherNames}"
+                                   itemValue="#{tutor}"/>
+                </p:selectManyMenu>
+                <p:message for="@previous" showSummary="false"/>
+
+                <p:outputLabel value="#{bundle.ScheduleLabel_demonstration}" for="@next"/>
+                <p:selectManyMenu id="selectDemonstration" value="#{scheduleController.selected.demonstrations}"
+                                  required="true"
+                                  requiredMessage="#{bundle.RequiredMessageSchedule_demonstrations}"
+                                  converter="omnifaces.SelectItemsConverter"
+                                  filter="true"
+                                  filterMatchMode="contains"
+                                  showCheckbox="true"
+                                  styleClass="w-100">
+                    <f:selectItems value="#{demonstrationController.demonstrations}"
+                                   var="demonstration"
+                                   itemLabel="#{demonstration.code} #{demonstration.name}"
+                                   itemValue="#{demonstration}"/>
+                </p:selectManyMenu>
+                <p:message for="@previous" showSummary="false"/>
+
+
+                <p:outputLabel value="#{bundle.ScheduleLabel_cohort}" for="@next"/>
+                <p:selectManyMenu id="selectCohots" value="#{scheduleController.selected.cohorts}"
+                                  required="true"
+                                  requiredMessage="#{bundle.RequiredMessageSchedule_cohorts}"
+                                  converter="omnifaces.SelectItemsConverter"
+                                  filter="true"
+                                  filterMatchMode="contains"
+                                  showCheckbox="true"
+                                  styleClass="w-100">
+                    <f:selectItems value="#{cohortController.cohorts}"
+                                   var="cohort"
+                                   itemLabel="#{cohort.code} #{cohort.name}"
+                                   itemValue="#{cohort}"/>
+                </p:selectManyMenu>
+                <p:message for="@previous" showSummary="false"/>
+
+                <p:commandButton actionListener="#{scheduleController.create}"
+                                 icon="pi pi-plus"
+                                 update="@form growl"
+                                 value="#{bundle.Create}"/>
+            </p:panelGrid>
+        </h:form>
+    </ui:define>
+</ui:composition>

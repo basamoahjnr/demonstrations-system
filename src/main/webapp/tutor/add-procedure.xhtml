@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/WEB-INF/layout/simpleTemplate.xhtml">
+
+    <ui:define name="headTitle">#{bundle.AddProcedurePage_title}</ui:define>
+
+    <ui:define name="metadata">
+        <style>
+            .w-100 {
+                width: 100%;
+            }
+
+            .ui-autocomplete-input {
+                width: 90% !important;
+            }
+
+            .notice {
+                padding: 1rem 2rem;
+            }
+        </style>
+    </ui:define>
+
+
+    <ui:define name="notice">
+        <div class="notice ui-message-info">
+            <p>
+                search for the demonstration you created in the search demonstration field, and select it.
+                Please note, if you want to replace a procedure at a position, click on delete to remove that procedure
+                and re add it throught the provided input boxes.
+            </p>
+        </div>
+    </ui:define>
+
+
+    <ui:define name="wrapper">
+
+        <h:form>
+
+            <p:panelGrid columns="3" columnClasses="ui-grid-col-2, ui-grid-col-6, ui-grid-col-4" layout="grid">
+                <p:outputLabel value="Search Demonstration :" for="@next"/>
+                <p:autoComplete id="selectDemonstration"
+                                dropdown="true"
+                                value="#{demonstrationController.selected}"
+                                emptyMessage="no demonstration with name found"
+                                required="true"
+                                requiredMessage="#{bundle.DemonstrationRequiredMessage}"
+                                completeMethod="#{demonstrationController.completeDemonstrationName}"
+                                scrollHeight="250"
+                                cache="true"
+                                selectLimit="1"
+                                forceSelection="true"
+                                minQueryLength="3"
+                                maxResults="10"
+                                var="demonstration"
+                                itemLabel="#{demonstration.code} #{demonstration.name}"
+                                itemValue="#{demonstration}"
+                                unique="true"
+                                converter="demonstrationConverter"
+                                cacheTimeout="30000"
+                                styleClass="w-100">
+                    <p:ajax event="itemSelect"
+                            listener="#{demonstrationController.onItemSelect}"
+                            update="growl @form"/>
+                </p:autoComplete>
+                <p:message for="@previous" showSummary="false"/>
+
+                <p:outputLabel value="Position" for="@next"/>
+                <p:inputText id="procedurePostion"
+                             value="#{demonstrationController.procedure.position}"
+                             requiredMessage="#{bundle.ProcedureRequiredMessage_position}"
+                             required="true"/>
+                <p:message for="@previous" showSummary="false"/>
+
+                <p:outputLabel value="Procedure Name:" for="@next"/>
+                <p:inputTextarea id="procedureName"
+                                 value="#{demonstrationController.procedure.name}"
+                                 requiredMessage="#{bundle.ProcedureRequiredMessage_name}"
+                                 rows="3"
+                                 styleClass="w-100"
+                                 required="true"/>
+                <p:message for="@previous" showSummary="false"/>
+
+                <p:commandButton icon="pi pi-plus"
+                                 actionListener="#{demonstrationController.addProcedure}"
+                                 update="@form growl"
+                                 value="Add"/>
+
+            </p:panelGrid>
+
+            <p:spacer height="10"/>
+
+            <p:dataTable id="proceduresTable"
+                         var="procedure"
+                         value="#{demonstrationController.selected.procedures}"
+                         editable="true"
+                         editMode="cell"
+                         editInitEvent="dblclick"
+                         style="margin-bottom:20px">
+
+                <p:ajax event="cellEdit" listener="#{demonstrationController.onCellEdit}" update="growl"/>
+
+                <p:column headerText="Position" width="50">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{procedure.position}" styleClass="w-100"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{procedure.position}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+
+                <p:column headerText="Name" style="width: 80%">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{procedure.name}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{procedure.name}" style="width:100%"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+
+                <p:column headerText="Action" colspan="2">
+                    <p:commandButton value="#{bundle.Delete}"
+                                     icon="pi pi-times"
+                                     update="@form growl"
+                                     process="@this"
+                                     actionListener="#{demonstrationController.removeProcedure(procedure)}"/>
+                </p:column>
+                <!--TODO change this update or edit method on the actionListner-->
+                <f:facet name="footer">
+                    <p:commandButton icon="pi pi-check"
+                                     rendered="#{not empty demonstrationController.selected.name}"
+                                     actionListener="#{demonstrationController.update}"
+                                     process="@this"
+                                     resetValues="true"
+                                     update="@form growl"
+                                     value="#{bundle.Create}">
+                    </p:commandButton>
+                </f:facet>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>

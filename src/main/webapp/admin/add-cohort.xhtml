@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/layout/simpleTemplate.xhtml">
+
+    <ui:define name="headTitle">#{bundle.AddStudentBatchPage_title}</ui:define>
+
+    <ui:define name="metadata">
+        <style>
+
+            .w-100 {
+                width: 100%;
+            }
+
+            .ui-autocomplete-input {
+                width: 85% !important;
+            }
+
+            .notice {
+                padding: 1rem 2rem;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="notice">
+        <div class="notice ui-message-info">
+             Creating Student Batch:
+            <ul>
+                <li>Year of Admission of students. eg 2022</li>
+                <li>Initial of program or course eg if program is Certificate Nursing then CN</li>
+                <li>If the batch belongs to a class, eg class C,B or A</li>
+                <li>you'll end up with batch name like : <em>2022CNC</em></li>
+            </ul>
+        </div>
+    </ui:define>
+
+    <ui:define name="wrapper">
+        <h:form>
+                <p:panelGrid columns="3" layout="grid" columnClasses="ui-grid-col-2,ui-grid-col-6,ui-grid-col-4">
+
+                    <p:outputLabel for="@next" value="#{bundle.CohortLabel_name}"/>
+                    <p:inputText id="cohortName"
+                                 required="true"
+                                 requiredMessage="#{bundle.RequiredMessageCohort_name}"
+                                 styleClass="w-100"
+                                 value="#{cohortController.selected.name}"/>
+                    <p:message for="@previous"/>
+
+                    <p:outputLabel for="@next" value="#{bundle.CohortLabel_code}"/>
+                    <p:inputText id="cohortCode"
+                                 required="true"
+                                 requiredMessage="#{bundle.RequiredMessageCohort_code}"
+                                 styleClass="w-100"
+                                 value="#{cohortController.selected.code}"/>
+                    <p:message for="@previous"/>
+
+                    <p:commandButton value="#{bundle.Create}"
+                                     icon="pi pi-plus"
+                                     update="@form growl"
+                                     action="#{cohortController.create}"/>
+                </p:panelGrid>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

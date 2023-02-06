@@ -1,0 +1,22 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:of="http://omnifaces.org/functions"
+                template="/WEB-INF/layout/template.xhtml">
+
+    <ui:define name="pageTitle"> Psst...something was wrong</ui:define>
+    <ui:define name="content">
+        <ul>
+
+            <li>User agent: #{header['user-agent']}</li>
+            <li>User IP: #{request.remoteAddr}</li>
+            <li>Request URI: #{requestScope['jakarta.servlet.error.request_uri']}</li>
+            <li>Ajax request: #{facesContext.partialViewContext.ajaxRequest ? 'Yes' : 'No'}</li>
+            <li>Status code: #{requestScope['jakarta.servlet.error.status_code']}</li>
+            <li>Exception type: #{requestScope['jakarta.servlet.error.exception_type']}</li>
+            <li>Exception message: #{requestScope['jakarta.servlet.error.message']}</li>
+            <li>Exception UUID: #{requestScope['org.omnifaces.exception_uuid']}</li>
+            <li>Stack trace:
+                <pre>#{of:printStackTrace(requestScope['jakarta.servlet.error.exception'])}</pre>
+            </li>
+        </ul>
+    </ui:define>
+</ui:composition>

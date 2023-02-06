@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+                template="/WEB-INF/layout/simpleTemplate.xhtml">
+
+    <ui:define name="headTitle">#{bundle.AddStudentPage_title}</ui:define>
+
+    <ui:define name="metadata">
+        <style>
+            .ui-selectonemenu {
+                width: 100%;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="wrapper">
+        <h:form>
+            <p:panelGrid columns="3" layout="grid" columnClasses="ui-grid-col-2,ui-grid-col-6,ui-grid-col-4">
+
+                <p:outputLabel for="@next" value="#{bundle.StudentLabel_number}"/>
+                <p:inputText id="studentNumber"
+                             required="true"
+                             requiredMessage="#{bundle.RequiredMessageStudent_number}"
+                             styleClass="w-100"
+                             value="#{studentController.selected.number}"/>
+                <p:message for="@previous"/>
+
+                <p:outputLabel for="@next" value="#{bundle.StudentLabel_surname}"/>
+                <p:inputText id="studentSurname"
+                             required="true"
+                             requiredMessage="#{bundle.RequiredMessageStudent_surname}"
+                             styleClass="w-100"
+                             value="#{studentController.selected.surname}"/>
+                <p:message for="@previous"/>
+
+                <p:outputLabel for="@next" value="#{bundle.StudentLabel_otherName}"/>
+                <p:inputText id="studentOthername"
+                             required="true"
+                             requiredMessage="#{bundle.RequiredMessageStudent_otherName}"
+                             styleClass="w-100"
+                             value="#{studentController.selected.otherNames}"/>
+                <p:message for="@previous"/>
+
+                <p:outputLabel for="@next" value="#{bundle.StudentLabel_email}"/>
+                <p:inputText id="studentEmail"
+                             required="true"
+                             requiredMessage="#{bundle.RequiredMessageStudent_email}"
+                             styleClass="w-100"
+                             value="#{studentController.selected.email}"/>
+                <p:message for="@previous"/>
+
+
+                <p:outputLabel for="@next" value="#{bundle.StudentLabel_program}"/>
+                <p:selectOneMenu value="#{studentController.selected.program}"
+                                 required="true"
+                                 requiredMessage="#{bundle.StudentRequiredMessage_program}"
+                                 converter="omnifaces.SelectItemsConverter"
+                                 styleClass="w-100"
+
+                                 autoWidth="true">
+                    <f:selectItem itemLabel="Select One" itemValue="" noSelectionOption="true"/>
+                    <f:selectItems value="#{programController.programs}"
+                                   var="program"
+                                   itemLabel="#{program.name}"
+                                   itemValue="#{program}"/>
+                </p:selectOneMenu>
+                <p:message for="@previous"/>
+
+                <p:outputLabel for="@next" value="#{bundle.StudentLabel_cohort}"/>
+                <p:selectOneMenu value="#{studentController.selected.cohort}"
+                                 required="true"
+                                 requiredMessage="#{bundle.StudentRequiredMessage_cohort}"
+                                 converter="omnifaces.SelectItemsConverter"
+                                 styleClass="w-100"
+
+                                 autoWidth="true">
+                    <f:selectItem itemLabel="Select One" itemValue="" noSelectionOption="true"/>
+                    <f:selectItems value="#{cohortController.cohorts}"
+                                   var="cohort"
+                                   itemLabel="#{cohort.code} #{cohort.name}"
+                                   itemValue="#{cohort}"/>
+                </p:selectOneMenu>
+                <p:message for="@previous"/>
+
+
+                <p:commandButton value="#{bundle.Create}"
+                                 icon="pi pi-plus"
+                                 update="@form growl"
+                                 action="#{studentController.create}">
+                </p:commandButton>
+            </p:panelGrid>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

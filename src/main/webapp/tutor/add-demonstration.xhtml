@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/layout/simpleTemplate.xhtml">
+
+    <ui:define name="headTitle">#{bundle.AddDemonstrationPage_title}</ui:define>
+
+
+    <ui:define name="wrapper">
+        <p:spacer height="10"/>
+        <h:form>
+            <div class="card">
+                <p:panelGrid layout="grid" columns="3" columnClasses="ui-grid-col-2, ui-grid-col-6, ui-grid-col-4">
+
+
+                    <p:outputLabel value="#{bundle.AddDemonstrationName_label}" for="@next"/>
+                    <p:inputText value="#{demonstrationController.selected.name}"
+                                 requiredMessage="#{bundle.ViewDemonstrationRequiredMessage_name}"
+                                 required="true"
+                                 styleClass="w-100"/>
+                    <p:message for="@previous" showSummary="false"/>
+
+
+                    <p:outputLabel for="@next" value="#{bundle.DemonstrationLabel_code}"/>
+                    <p:inputText id="cohortCode"
+                                 required="true"
+                                 requiredMessage="#{bundle.RequiredMessageDemonstration_code}"
+                                 styleClass="w-100"
+                                 value="#{demonstrationController.selected.code}"/>
+                    <p:message for="@previous"/>
+
+                    <p:commandButton id="createDemonstration"
+                                     update="@form growl"
+                                     icon="pi pi-check"
+                                     value="#{bundle.Create}"
+                                     actionListener="#{demonstrationController.create}"/>
+                </p:panelGrid>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

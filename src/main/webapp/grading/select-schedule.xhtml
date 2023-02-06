@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:of="http://omnifaces.org/functions" xmlns:h="http://java.sun.com/jsf/html"
+                template="/WEB-INF/layout/simpleTemplate.xhtml">
+
+    <ui:define name="headTitle">#{bundle.GradingPage_title}</ui:define>
+
+    <ui:define name="metadata">
+        <style>
+            .ui-selectonemenu {
+                width: 100%;
+            }
+
+            .w-100 {
+                width: 100%;
+            }
+
+            .ui-autocomplete-input {
+                width: 85% !important;
+            }
+
+            .notice {
+                padding: 1rem 2rem;
+            }
+        </style>
+        <f:event listener="#{gradingController.initConversation}" type="preRenderView"/>
+    </ui:define>
+
+    <ui:define name="notice">
+        <div class="notice ui-message-info">
+        Process:
+            <ul>
+                <li>Select the Date from Schedule</li>
+                <li>select the cohort you are going to invigilate</li>
+                <li>Select the demonstration you will be invigilating</li>
+                <li>start typing the student number or select from the drop down menu in select student</li>
+                <li>Click on start Demonstration to begin grading demonstration</li>
+            </ul>
+        </div>
+    </ui:define>
+
+    <ui:define name="wrapper">
+        <h:form id="form">
+            <p:panelGrid columns="3"
+                         columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-4"
+                         layout="grid">
+                <p:outputLabel value="#{bundle.DashboardSchedule_label}"
+                               for="@next"/>
+                <p:selectOneMenu value="#{gradingController.selected.schedule}"
+                                 converter="omnifaces.SelectItemsConverter"
+                                 requiredMessage="#{bundle.RequiredMessageDashboard_schedule}"
+                                 required="true"
+                                 placeholder="Select Schedule"
+                                 hideNoSelectionOption="#{not empty gradingController.selected.schedule}">
+                    <f:selectItem itemValue=""
+                                  itemLabel="Select A Schedule Date"
+                                  noSelectionOption="true"/>
+                    <f:selectItems value="#{scheduleController.getTutorSchedules(request.userPrincipal.name)}"
+                                   var="schedule"
+                                   itemLabel="#{of:formatDate(schedule.startDate, 'dd-MM-yyyy')}"
+                                   itemValue="#{schedule}"/>
+                    <p:ajax event="valueChange" update="selectCohort selectDemonstration searchStudent" process="@this"/>
+                </p:selectOneMenu>
+                <p:message for="@previous"/>
+
+
+                <p:outputLabel value="#{bundle.DashboardScheduleCohort_label}"
+                               for="@next"/>
+                <p:selectOneMenu id="selectCohort"
+                                 value="#{gradingController.selected.cohort}"
+                                 converter="omnifaces.SelectItemsConverter"
+                                 required="true"
+                                 requiredMessage="#{bundle.RequiredMessageSchedule_cohorts}"
+                                 hideNoSelectionOption="#{not empty gradingController.selected.cohort}">
+                    <f:selectItem itemValue=""
+                                  itemLabel="Select Cohort"
+                                  noSelectionOption="true"/>
+                    <f:selectItems value="#{gradingController.selected.schedule.cohorts}"
+                                   var="cohort"
+                                   itemLabel="#{cohort.name}"
+                                   itemValue="#{cohort}"/>
+                    <p:ajax event="valueChange" update="selectDemonstration searchStudent" process="@this"/>
+                </p:selectOneMenu>
+                <p:message for="@previous"/>
+
+
+                <p:outputLabel value="#{bundle.DashboardScheduleDemonstration_label}"
+                               for="@next"/>
+                <p:selectOneMenu id="selectDemonstration"
+                                 value="#{gradingController.selected.demonstration}"
+                                 converter="omnifaces.SelectItemsConverter"
+                                 required="ture"
+                                 requiredMessage="#{bundle.RequiredMessageSchedule_demonstrations}"
+                                 hideNoSelectionOption="#{not empty gradingController.selected.demonstration}">
+                    <f:selectItem itemValue="#{null}"
+                                  itemLabel="Select Demonstration"
+                                  noSelectionOption="true"/>
+                    <f:selectItems value="#{gradingController.selected.schedule.demonstrations}"
+                                   var="demonstration"
+                                   itemLabel="#{demonstration.name}"
+                                   itemValue="#{demonstration}"/>
+                    <p:ajax event="valueChange" process="@this" update="searchStudent"/>
+                </p:selectOneMenu>
+                <p:message for="@previous"/>
+
+
+                <p:outputLabel value="Search Student :"
+                               for="@next"/>
+                <p:autoComplete id="searchStudent"
+                                minQueryLength="3"
+                                dropdown="true"
+                                value="#{gradingController.selected.student}"
+                                emptyMessage="no student with name found"
+                                required="true"
+                                requiredMessage="#{bundle.RequiredMessageGradeBook_student}"
+                                completeMethod="#{gradingController.completeStudentNumber}"
+                                scrollHeight="250"
+                                selectLimit="1"
+                                forceSelection="true"
+                                maxResults="20"
+                                var="student"
+                                itemLabel="#{student.number} #{student.surname} #{student.otherNames}"
+                                itemValue="#{student}"
+                                unique="true"
+                                converter="studentConverter"
+                                styleClass="w-100">
+                </p:autoComplete>
+                <p:message for="@previous"/>
+
+
+                <p:commandButton value="Confirm"
+                                 process="@this, @form"
+                                 update="@form"
+                                 oncomplete="(!args.validationFailed) ? PF('dlg2').show() : PF('dlg2').hide()"
+                                 icon="pi pi-external-link"/>
+            </p:panelGrid>
+
+            <p:dialog header="Selected Student" widgetVar="dlg2" showEffect="fade" modal="true">
+                <p:panelGrid columns="2">
+                    <h:outputText value="Student Number: "/>
+                    <h:outputText value="#{gradingController.selected.student.number}"/>
+                    <h:outputText value="Student Surname: "/>
+                    <h:outputText value="#{gradingController.selected.student.surname}"/>
+                    <h:outputText value="Student Other Names: "/>
+                    <h:outputText value="#{gradingController.selected.student.otherNames}"/>
+                    <h:outputText value="Grading Demonstration: "/>
+                    <h:outputText value="#{gradingController.selected.demonstration.name}"/>
+                </p:panelGrid>
+
+                <f:facet name="footer">
+                    <p:commandButton value="Cancel Grading"
+                                     icon="pi pi-times"
+                                     styleClass="ui-button-danger"
+                                     process="@this"
+                                     oncomplete="PF('dlg2').hide()"
+                                     update="@form growl"/>
+                    <p:commandButton action="#{gradingController.beginGrading}"
+                                     icon="pi pi-chevron-right"
+                                     ajax="false"
+                                     value="Start Grading"/>
+                </f:facet>
+            </p:dialog>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/WEB-INF/layout/simpleTemplate.xhtml">
+
+    <ui:define name="headTitle">#{bundle.UploadProceduresPage_title}</ui:define>
+
+    <ui:define name="metadata">
+        <style>
+
+            .w-100 {
+                width: 100%;
+            }
+            .ui-autocomplete-input {
+                width: 90% !important;
+            }
+
+            .notice {
+                padding: 1rem 2rem;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="notice">
+        <div class="notice ui-message-info">
+            <p>
+                search for the demonstration you created in the search demonstration field,
+                once done click on select procedures to select the procedures file to upload
+
+            </p>
+            <p>REQUIREMENTS FOR THE FILE:</p>
+            <ul>
+                <li>the file has to be a csv file</li>
+                <li>it must have populated fields with header POSITION representiong which place the procedure will be in the list of procedures, eg 1</li>
+                <li>it must have populated fields with header NAME representing what the actual procedures will be. eg Clean wound with spirit</li>
+                <li>the comma seperated values should be in quotes</li>
+            </ul>
+        </div>
+    </ui:define>
+
+    <ui:define name="wrapper">
+        <h:form enctype="multipart/form-data" id="form">
+            <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-6,ui-grid-col-4" layout="grid">
+                <p:outputLabel value="Search Demonstration :" for="@next"/>
+                <p:autoComplete id="selectDemonstration"
+                                dropdown="true"
+                                value="#{demonstrationController.selected}"
+                                emptyMessage="no demonstration with name found"
+                                required="true"
+                                requiredMessage="#{bundle.ProcedureRequiredMessage_name}"
+                                completeMethod="#{demonstrationController.completeDemonstrationName}"
+                                scrollHeight="250"
+                                cache="true"
+                                selectLimit="1"
+                                forceSelection="true"
+                                minQueryLength="3"
+                                maxResults="10"
+                                var="demonstration"
+                                itemLabel="#{demonstration.code} #{demonstration.name}"
+                                itemValue="#{demonstration}"
+                                unique="true"
+                                converter="demonstrationConverter"
+                                cacheTimeout="30000"
+                                styleClass="w-100">
+                    <p:ajax event="itemSelect"
+                            listener="#{demonstrationController.onItemSelect}"
+                            update="growl proceduresTable"/>
+                </p:autoComplete>
+                <p:message for="@previous" showSummary="false"/>
+
+
+                <p:outputLabel value="Select Procedure(s):" for="@next"/>
+                <p:fileUpload value="#{demonstrationController.file}"
+                              id="fileUpload"
+                              mode="simple"
+                              skinSimple="true"
+                              dragDropSupport="false"
+                              required="true"
+                              requiredMessage="#{bundle.ProcedureRequiredMessage_fileUpload}"
+                              sizeLimit="1000000"
+                              fileLimit="1"
+                              multiple="false"
+                              allowTypes="/(\.|\/)(csv)$/"/>
+                <p:message for="@previous" showSummary="false"/>
+
+                <p:commandButton actionListener="#{demonstrationController.upload}" value="Upload Procedure" ajax="false"/>
+            </p:panelGrid>
+
+
+            <p:spacer height="10"/>
+
+            <p:dataTable rendered="#{not empty demonstrationController.selected.procedures}"
+                         id="proceduresTable"
+                         var="procedure"
+                         value="#{demonstrationController.selected.procedures}"
+                         editable="true"
+                         editMode="cell"
+                         editInitEvent="dblclick"
+                         style="margin-bottom:20px">
+
+                <f:facet name="header">
+                    <p:commandButton icon="pi pi-plus"
+                                     actionListener="#{demonstrationController.update}"
+                                     process="@this"
+                                     resetValues="true"
+                                     update="@form growl"
+                                     value="#{bundle.Create}"/>
+
+                </f:facet>
+
+
+                <p:column headerText="Position" width="50">
+                    <h:outputText value="#{procedure.position}"/>
+                </p:column>
+
+
+                <p:column headerText="Procedure" colspan="8">
+                    <h:outputText value="#{procedure.name}" style="width: 80%"/>
+                </p:column>
+            </p:dataTable>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
