@@ -62,16 +62,19 @@ public class Schedule extends AbstractEntity implements Serializable {
     /**
      * tutors responsible for invigilating this schedule
      */
+    @OrderBy("id DESC")
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "schedule_examiners")
     private Set<Tutor> examiners;
     /**
      * demonstration associated with this schedule
      */
+    @OrderBy("code DESC")
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "schedule_demonstrations")
     private Set<Demonstration> demonstrations;
 
+    @OrderBy("code DESC")
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "schedule_cohorts")
     private Set<Cohort> cohorts;
