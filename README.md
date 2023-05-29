@@ -23,7 +23,7 @@ Grading
 
 
 
-###### BUG FIX FOR SECURITY SETTINGS WITH JAKARTA EE SECURITY ON WILDFLY
+###### BUG FIX FOR SECURITY SETTINGS WITH JAKARTA EE SECURITY ON WILDFLY 27
 follow to deal with exception Caused by: java.io.IOException: ELY01177: Authorization failed. at
 org.wildfly.security.jakarta.authentication@3.0.0.Final//org.wildfly.security.auth.jaspi.impl.JaspiAuthenticationContext$1.handleOne(
 JaspiAuthenticationContext.java:261)
